@@ -4,3 +4,4 @@
     * [let和const](ES6/let-and-const.md)
     * [模板字符串](ES6/模板字符串.md)
     * [箭头函数](ES6/箭头函数.md)
+    * [解构赋值](ES6/解构赋值.md)
