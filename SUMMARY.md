@@ -9,3 +9,7 @@
     * [剩余参数与展开运算符](ES6/剩余参数与展开运算符.md)
     * [Set和Map](ES6/Set和Map.md)
     * [遍历器](ES6/遍历器.md)
+    * [ES6新增方法](ES6/ES6新增方法.md)
+    * [Promise](ES6/Promise.md)
+    * [Class类](ES6/Class.md)
+    * [Module模块](ES6/Module.md)
