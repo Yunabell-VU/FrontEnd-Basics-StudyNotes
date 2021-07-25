@@ -1,4 +1,7 @@
 # HTML 5
+
+[TOC]
+
 ## 常用快捷键
 
 复制当前行 `ctrl+shift+D`
