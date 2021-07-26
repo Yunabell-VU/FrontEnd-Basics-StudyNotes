@@ -14,4 +14,4 @@
     * [Promise](ES6/Promise.md)
     * [Class类](ES6/Class.md)
     * [Module模块](ES6/Module.md)
-    * [Bebel和Webpack](ES6/Babel-Webpack.md)
+    * [Babel和Webpack](ES6/Babel-Webpack.md)
