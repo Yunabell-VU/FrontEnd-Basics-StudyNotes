@@ -24,9 +24,9 @@
 
    - 浏览器在请求某一个地址时，会先在缓存中查找是否访问过此地址。如果访问过，则不会像服务器发送HTTP请求了。
 
-   
+请求响应的过程：
 
-   <img src="C:\Users\Yunab\OneDrive\前端学习\ES6\前后端数据交互与HTTP协议\图\2.HTTP 请求响应的过程.png" alt="2.HTTP 请求响应的过程" style="zoom:80%;" />
+   ![2.HTTP 请求响应的过程](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/2.HTTP 请求响应的过程.png)
 
    
 
