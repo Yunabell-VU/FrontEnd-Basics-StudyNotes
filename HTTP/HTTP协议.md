@@ -24,11 +24,10 @@
 
    - 浏览器在请求某一个地址时，会先在缓存中查找是否访问过此地址。如果访问过，则不会像服务器发送HTTP请求了。
 
-请求响应的过程：
-
-   ![2.HTTP 请求响应的过程](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/2.HTTP 请求响应的过程.png)
-
    
+
+   ![2.HTTPResponsProcess](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/2.HTTPResponsProcess.png)
+
 
 #### HTTP报文
 
@@ -60,7 +59,7 @@
 
 2. HTTP 报文格式
 
-   ![3.http 报文格式](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/3.http 报文格式.png)
+   ![3.httpReport](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/3.httpReport.png)
 
    **请求：**
 
@@ -225,7 +224,7 @@
    
 
    100~199 消息：代表请求已被接受，需要继续处理
-    - websocket (ws)
+   - websocket (ws)
 
 
 
