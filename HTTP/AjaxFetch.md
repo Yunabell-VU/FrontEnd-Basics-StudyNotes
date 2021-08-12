@@ -274,3 +274,4 @@ xhr.send(`username=${encodeURIComponent('张三')}&age=18`);
 
 
 ------
+
