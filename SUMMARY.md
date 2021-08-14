@@ -21,3 +21,4 @@
     * [Ajax基础](HTTP/Ajax基础.md)
     * [JSON](HTTP/JSON.md)
     * [跨域](HTTP/跨域.md)
+    * [XHR对象](HTTP/XHR对象.md)
