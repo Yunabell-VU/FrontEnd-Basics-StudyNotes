@@ -161,7 +161,7 @@ btn.addEventListener(
 
 
 
-##### `ajax.js`
+#### `ajax.js`
 
 ```javascript
 // ajax.js
@@ -271,9 +271,20 @@ class Ajax {
   addParam() {
     const { params } = this.options;
 
-    if (!params) return '';
-
-    return addURLData(this.url, serialize(params));
+    if (!params) return ''; //param:null
+	
+    //将对象形式转成url形式
+  	// params: {
+  	//   username: 'alex',
+  	//   age: 18
+  	// }
+    
+  	//转成：
+  	// username=alex&age=18
+    
+    // 再判断url上有没有参数，怎么直接添加在后面
+ 
+    return addURLData(this.url, serialize(params)); //该function在utils里
   }
 
   // 设置 responseType
@@ -337,7 +348,7 @@ class Ajax {
 
     if (!data) return false;
 
-    if (method.toLowerCase() === HTTP_GET.toLowerCase()) return false;
+    if (method.toLowerCase() === HTTP_GET.toLowerCase()) return false; //HTTP_GET在constants.js中
 
     return true;
   }
@@ -376,7 +387,7 @@ export default Ajax;
 
 ```
 
-##### `defaults.js`
+#### `defaults.js`
 
 ```javascript
 //defaults.js
@@ -422,6 +433,284 @@ const DEFAULTS = {
 };
 
 export default DEFAULTS;
+
+```
+
+#### `utils.js`
+
+```javascript
+// 工具函数
+
+// 数据序列化成 urlencoded 格式的字符串
+const serialize = param => {
+  const results = [];
+
+  for (const [key, value] of Object.entries(param)) {
+    results.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+  }
+
+  // ['username=alex', 'age=18'];
+
+  return results.join('&');
+};
+
+// 数据序列化成 JSON 格式的字符串
+const serializeJSON = param => {
+  return JSON.stringify(param);
+};
+
+// 给 URL 添加参数
+// www.imooc.com?words=js&
+const addURLData = (url, data) => { //data是字符串的格式
+  if (!data) return ''; //空串直接返回
+
+  const mark = url.includes('?') ? '&' : '?';
+
+  return `${mark}${data}`;
+};
+
+export { serialize, addURLData, serializeJSON };
+
+```
+
+#### `constants.js`
+
+```javascript
+// 常量
+export const HTTP_GET = 'GET';
+export const CONTENT_TYPE_FORM_URLENCODED = 'application/x-www-form-urlencoded';
+export const CONTENT_TYPE_JSON = 'application/json';
+```
+
+#### 实例化Ajax：`index.js`
+
+```javascript
+import Ajax from './ajax.js';
+
+const ajax = (url, options) => {
+  return new Ajax(url, options).getXHR();
+};
+
+const get = (url, options) => {
+  return ajax(url, { ...options, method: 'GET' });//用GET覆盖用户的options
+};
+
+const getJSON = (url, options) => {
+  return ajax(url, { ...options, method: 'GET', responseType: 'json' });
+};
+
+const post = (url, options) => {
+  return ajax(url, { ...options, method: 'POST' });
+};
+
+export { ajax, get, getJSON, post };
+
+```
+
+#### `index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>封装 Ajax</title>
+  </head>
+  <body>
+    <script type="module">
+
+      import { ajax, get, getJSON, post } from './ajax/index.js';
+
+      const url = 'https://www.imooc.com/api/http/search/suggest?words=js';
+      // const url = 'https://www.iimooc.com/api/http/search/suggest?words=js';
+
+      // const url = './414.html';
+
+      const xhr = ajax(url, {
+        method: 'GET',
+        params: { username: 'alex' },
+        data: {
+          age: 18
+        },
+        responseType: 'json',
+        // timeoutTime: 10,
+
+        success(response) {
+          console.log(response);
+        },
+        httpCodeError(err) {
+          console.log('http code error', err);
+        },
+        error(xhr) {
+          console.log('error', xhr);
+        },
+        abort(xhr) {
+          console.log('abort', xhr);
+        },
+        timeout(xhr) {
+          console.log('timeout', xhr);
+        }
+      });
+
+      xhr.abort();
+    </script>
+  </body>
+</html>
+
+```
+
+------
+
+## 用Promise改造封装好的Ajax
+
+#### 改造`index.js`
+
+```javascript
+import Ajax from './ajax.js';
+// 常量
+import {
+  ERROR_HTTP_CODE,
+  ERROR_REQUEST,
+  ERROR_TIMEOUT,
+  ERROR_ABORT,
+  ERROR_HTTP_CODE_TEXT,
+  ERROR_REQUEST_TEXT,
+  ERROR_TIMEOUT_TEXT,
+  ERROR_ABORT_TEXT
+} from './constants.js';
+
+const ajax = (url, options) => {
+  // return new Ajax(url, options).getXHR();
+  let xhr;
+  const p = new Promise((resolve, reject) => {
+    xhr = new Ajax(url, {
+        //两个项展开是为了完成合并
+      ...options,
+      ...{
+        success(response) {
+          resolve(response);
+        },
+        httpCodeError(status) {
+          reject({
+            type: ERROR_HTTP_CODE,
+            text: `${ERROR_HTTP_CODE_TEXT}: ${status}`
+          });
+        },
+        error() {
+          reject({
+            type: ERROR_REQUEST,
+            text: ERROR_REQUEST_TEXT
+          });
+        },
+        abort() {
+          reject({
+            type: ERROR_ABORT,
+            text: ERROR_ABORT_TEXT
+          });
+        },
+        timeout() {
+          reject({
+            type: ERROR_TIMEOUT,
+            text: ERROR_TIMEOUT_TEXT
+          });
+        }
+      }
+    }).getXHR();
+  });
+
+  p.xhr = xhr;
+  p.ERROR_HTTP_CODE = ERROR_HTTP_CODE;
+  p.ERROR_REQUEST = ERROR_REQUEST;
+  p.ERROR_TIMEOUT = ERROR_TIMEOUT;
+  p.ERROR_ABORT = ERROR_ABORT;
+
+  return p;
+};
+
+const get = (url, options) => {
+  return ajax(url, { ...options, method: 'GET' });
+};
+
+const getJSON = (url, options) => {
+  return ajax(url, { ...options, method: 'GET', responseType: 'json' });
+};
+
+const post = (url, options) => {
+  return ajax(url, { ...options, method: 'POST' });
+};
+
+export { ajax, get, getJSON, post };
+
+```
+
+#### `constants.js`
+
+```javascript
+// 常量
+export const HTTP_GET = 'GET';
+export const CONTENT_TYPE_FORM_URLENCODED = 'application/x-www-form-urlencoded';
+export const CONTENT_TYPE_JSON = 'application/json';
+
+export const ERROR_HTTP_CODE = 1; //这个的数字是自定义的
+export const ERROR_HTTP_CODE_TEXT = 'HTTP 状态码异常';
+export const ERROR_REQUEST = 2;
+export const ERROR_REQUEST_TEXT = '请求被阻止';
+export const ERROR_TIMEOUT = 3;
+export const ERROR_TIMEOUT_TEXT = '请求超时';
+export const ERROR_ABORT = 4;
+export const ERROR_ABORT_TEXT = '请求终止';
+
+```
+
+#### `index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>使用 Promise 改造封装好的 Ajax</title>
+  </head>
+  <body>
+    <script type="module">
+      import { ajax, get, getJSON, post } from './ajax/index.js';
+
+      const url = 'https://www.imooc.com/api/http/search/suggest?words=js';
+      // const url = 'https://www.iimooc.com/api/http/search/suggest?words=js';
+
+      const p = getJSON(url, {
+        params: { username: 'alex' },
+        data: { age: 18 }
+        // timeoutTime: 10
+        // success(){},error(){}
+      });
+      p.xhr.abort();
+
+      const { ERROR_HTTP_CODE, ERROR_REQUEST, ERROR_TIMEOUT, ERROR_ABORT } = p;
+		
+        //success走then，fail走catch
+      p.then(repsonse => {
+        console.log(repsonse);
+      }).catch(err => {
+        // console.log(err);
+        switch (err.type) {
+          case ERROR_HTTP_CODE:
+            console.log(err.text);
+            break;
+          case ERROR_REQUEST:
+            console.log(err.text);
+            break;
+          case ERROR_TIMEOUT:
+            console.log(err.text);
+            break;
+          case ERROR_ABORT:
+            console.log(err.text);
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>
 
 ```
 
