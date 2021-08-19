@@ -24,3 +24,4 @@
     * [XHR对象](HTTP/XHR对象.md)
     * [Ajax封装](HTPP/Ajax封装.md)
     * [Ajax应用](HTPP/Ajax应用.md)
+    * [Axios与Fetch](HTPP/axios.md)
