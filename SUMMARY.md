@@ -26,5 +26,5 @@
     * [Ajax应用](HTPP/Ajax应用.md)
     * [Axios与Fetch](HTPP/axios.md)
 * [移动端开发](移动端/README.md)
-    * [移动web开发基础](移动端/移动web开发基础.md)
+    * [移动web开发基础](移动端/移动Web开发基础.md)
     * [Flex布局](移动端/flex.md)
