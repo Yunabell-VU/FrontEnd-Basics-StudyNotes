@@ -182,3 +182,165 @@ border-box在使用float时非常好用，避免添加边框后把盒子挤下�
 
 ****
 
+
+
+### 媒体查询
+
+##### 什么是媒体查询 media query
+
+媒体查询是指查询屏幕尺寸
+
+```html
+<style>
+    /*在设备屏幕大于等于900px时，执行里面的语句*/
+	@media screen and (min-width: 900px) {
+		body {
+			background-color: red;
+		}
+	}
+</style>
+```
+
+
+
+##### 为什么需要媒体查询
+
+一套样式不可能适应各种大小的屏幕，针对不同的屏幕大小写样式，让我们的页面在不同大小的屏幕上都能正常显示
+
+
+
+##### 媒体类型
+
+- all (default) ：默认值，所有都可以
+
+  ```html
+  <style>
+  	@media (min-width: 900px) {
+  		body {
+  			background-color: red;
+  		}
+  	}
+  </style>
+  ```
+
+  
+
+- screen : 屏幕设备
+
+- print ：打印预览
+
+- speech ：屏幕阅读器
+
+
+
+##### 媒体查询中的逻辑
+
+- 与( and )
+
+  ```html
+  <style>
+      /*在设备屏幕在900和1024之间时执行*/
+  	@media screen and (min-width: 900px) and (max-width: 1024px) {
+          body {
+              background-color: red;
+          }
+  	}
+  </style>
+  ```
+
+- 或( , )
+
+  ```html
+  <style>
+      /*设备屏幕 > 1024 或 all < 900 时执行*/
+      /*注意这里 screen 后面的 and 只包含 screen和min-width，逗号之后的max-width不被包含在内*/
+  	@media screen and (min-width: 1024px), (max-width: 900px) {
+          body {
+              background-color: red;
+          }
+  	}
+  </style>
+  ```
+
+  ```html
+  <style>
+      /*设备屏幕 > 1024 或 设备屏幕 < 900 时执行*/
+  	@media screen and (min-width: 1024px), screen and (max-width: 900px) {
+          body {
+              background-color: red;
+          }
+  	}
+  </style>
+  ```
+
+- 非( not )
+
+  ```html
+  <style>
+      /*设备屏幕 > 1024 或 设备屏幕 < 900 时执行*/
+      /*not 包含所有and的内容 */
+  	@media not screen and (min-width: 900px) and (max-width: 1024px) {
+          body {
+              background-color: red;
+          }
+  	}
+  </style>
+  ```
+
+  ```html
+  <style>
+      /*设备屏幕 <= 1024 或 设备屏幕 < 900 时执行*/
+      /*not 只作用在第一个and上，逗号之后的部分不被not涵盖 */
+  	@media not screen and (min-width: 1024px), screen and (max-width: 900px) {
+          body {
+              background-color: red;
+          }
+  	}
+  </style>
+  ```
+
+  
+
+##### 媒体特征表达式
+
+- width/max-width/min-width : 单独的width只能规定一个特定的值，很少使用
+
+- -webkit-device-pixel-ratio/-webkit-max-device-pixel-ratio/-webkit-min-pixel-ratio
+
+  ```html
+  <style>
+      /*DPR <= 2 时生效 */
+  	@media (-webkit-max-device-pixel-ratio: 2) {
+          body {
+              background-color: red;
+          }
+  	}
+  </style>
+  ```
+
+- orientation
+  - landscape/portrait: 横屏/竖屏
+
+  ```css
+  <style>
+      /*DPR <= 2 并且横屏时 （宽 > 高）生效 */
+  	@media (-webkit-max-device-pixel-ratio: 2) and (orientation: landscape) {
+          body {
+              background-color: red;
+          }
+  	}
+  </style>
+  ```
+
+- height：根据屏幕高度生效，基本不会用到
+- device-width/device-height : 和JS中的screen.width/screen.height问题类似，获取的有时是物理像素有时是CSS像素，不好用
+- aspect-ratio ：视口的宽高比，基本不会用到
+
+
+
+****
+
+
+
+### 移动端常用单位
+
