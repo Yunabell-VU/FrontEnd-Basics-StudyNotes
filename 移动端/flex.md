@@ -25,6 +25,10 @@ flex 容器的所有**子元素**自动成为容器成员(子元素的子元素�
 
 
 
+****
+
+
+
 ### 容器的属性
 
 写在容器上的属性：
@@ -338,3 +342,116 @@ flex 容器的所有**子元素**自动成为容器成员(子元素的子元素�
 
 ![image-20210828203842956](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210828203842956.png)
 
+
+
+****
+
+
+
+### 项目的属性
+
+- order
+- flex-grow
+- flex-shrink
+- flex-basis
+- flex
+- align-self
+
+
+
+#### order 属性
+
+- order 属性定义项目的排列顺序
+- 数值越小，排列越靠前，默认为0
+
+```css
+.item { 
+    order: <integer>; 
+}
+```
+
+![image-20210829151912432](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210829151912432.png)
+
+
+
+#### flex-grow 属性
+
+- flex-grow 属性定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大
+- 如果所有项目的 flex-grow 属性都为1，则它们将等分剩余空间（如果有的话）
+- 如果一个项目的 flex-grow 属性为2，其他项目都为1，则前者占据的剩余空间将比其他项多一倍
+
+```css
+.item { 
+    flex-grow: <number>; /* default 0 */ 
+}
+```
+
+![image-20210829152218893](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210829152218893.png)
+
+- 如果有的项目有 flex-grow 属性，有的项目有 width 属性，有 flex-grow 属性的项目将等分剩余空间
+
+![image-20210829152250382](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210829152250382.png)
+
+
+
+#### flex-shrink 属性
+
+- flex-shrink 属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小
+- 如果所有项目的 flex-shrink 属性都为1，当空间不足时，都将等比例缩小
+- 如果一个项目的 flex-shrink 属性为0，其他项目都为1，则空间不足时，前者不缩小
+- 负值对该属性无效。
+
+```css
+.item { 
+    flex-shrink: <number>; /* default 1 */ 
+}
+```
+
+![image-20210829152404711](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210829152404711.png)
+
+
+
+#### flex-basis 属性
+
+- flex-basis 属性定义了在分配多余空间之前，项目占据的主轴空间（main size）
+- 浏览器根据这个属性，计算主轴是否有多余空间
+- 它的默认值为auto，即项目的本来大小
+
+```css
+.item { 
+    flex-basis: <length>; | auto; /* default auto */ 
+}
+```
+
+![image-20210829152453552](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210829152453552.png)
+
+
+
+#### flex 属性
+
+- flex 属性是 flex-grow, flex-shrink 和 flex-basis 的简写，默认值为`0`,  `1`, ` auto`
+- 后两个属性可选
+- 该属性有两个快捷值：auto (1 1 auto) 和 none (0 0 auto)
+
+```css
+.item { 
+    flex: none | [ <flex-grow> <flex-shrink>? || <flex-basis> ] 
+}
+```
+
+![image-20210829154249237](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210829154249237.png)
+
+
+
+#### align-self 属性
+
+- align-self 属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性
+- 默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch
+
+```css
+.item { 
+    align-self: auto | flex-start | flex-end | center | baseline | stretch; 
+}
+```
+
+![image-20210829154336805](http://yunabell-image-repository.oss-cn-shanghai.aliyuncs.com/img/image-20210829154336805.png)
