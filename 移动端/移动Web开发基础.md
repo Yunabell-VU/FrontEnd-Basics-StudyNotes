@@ -239,7 +239,7 @@ border-box在使用float时非常好用，避免添加边框后把盒子挤下�
 
   ```html
   <style>
-      /*在设备屏幕在900和1024之间时执行*/
+      /* 900<= 设备屏幕 <= 1024 时执行*/
   	@media screen and (min-width: 900px) and (max-width: 1024px) {
           body {
               background-color: red;
@@ -252,7 +252,7 @@ border-box在使用float时非常好用，避免添加边框后把盒子挤下�
 
   ```html
   <style>
-      /*设备屏幕 > 1024 或 all < 900 时执行*/
+      /*设备屏幕 >= 1024 或 all <= 900 时执行*/
       /*注意这里 screen 后面的 and 只包含 screen和min-width，逗号之后的max-width不被包含在内*/
   	@media screen and (min-width: 1024px), (max-width: 900px) {
           body {
@@ -264,7 +264,7 @@ border-box在使用float时非常好用，避免添加边框后把盒子挤下�
 
   ```html
   <style>
-      /*设备屏幕 > 1024 或 设备屏幕 < 900 时执行*/
+      /*设备屏幕 >= 1024 或 设备屏幕 <= 900 时执行*/
   	@media screen and (min-width: 1024px), screen and (max-width: 900px) {
           body {
               background-color: red;
@@ -277,7 +277,7 @@ border-box在使用float时非常好用，避免添加边框后把盒子挤下�
 
   ```html
   <style>
-      /*设备屏幕 > 1024 或 设备屏幕 < 900 时执行*/
+      /*设备屏幕 >= 1024 或 设备屏幕 <= 900 时执行*/
       /*not 包含所有and的内容 */
   	@media not screen and (min-width: 900px) and (max-width: 1024px) {
           body {
@@ -289,7 +289,7 @@ border-box在使用float时非常好用，避免添加边框后把盒子挤下�
 
   ```html
   <style>
-      /*设备屏幕 <= 1024 或 设备屏幕 < 900 时执行*/
+      /*设备屏幕 < 1024 或 设备屏幕 <= 900 时执行*/
       /*not 只作用在第一个and上，逗号之后的部分不被not涵盖 */
   	@media not screen and (min-width: 1024px), screen and (max-width: 900px) {
           body {
@@ -338,9 +338,168 @@ border-box在使用float时非常好用，避免添加边框后把盒子挤下�
 
 
 
+#### 媒体查询策略
+
+**断点： 发生变化的点**
+
+- xs （超小屏，一般的手机）: < 576px
+- sm （小屏，大屏手机）: 576px ~ 768px
+- md （中屏，平板）: 768px ~ 992px
+- lg （大屏，显示器）: 992px ~ 1200px
+- xl （超大屏）: > 1200px
+
+实际开发中，只要页面显示不正常时，就应该设置断点了，不一定非要按照以上的尺寸来划分。
+
+
+
+下面的代码是一个不太聪明的写法，虽然一目了然，但是很啰嗦：
+
+```css
+<style>
+/*超小屏*/
+@media (max-width: 576px) {
+    .col {
+        width: 100%;
+    }
+}
+/*小屏*/
+@media (min-width: 577px) and (max-width: 768px) {
+    .col {
+        width: 50%;
+    }
+}
+/*中屏*/
+@media (min-width: 769px) and (max-width: 992px) {
+    .col {
+        width: 25%;
+    }
+}
+/*大屏*/
+@media (min-width: 993px) and (max-width: 1200px) {
+    .col {
+        width: 16.6666666667%;
+    }
+}
+/*超大屏*/
+@media (min-width: 1201px) {
+    .col {
+        width: 8.333333333%;
+    }
+}
+</style>
+```
+
+**比较好的写法是：**
+
+注意：下面的写法同上面的代码不同，顺序是不能更改的
+
+```html
+<style>
+/*优先PC端*/
+    .col {
+            width: 8.333333333%;
+        }
+        @media (max-width: 1200px) {
+            .col {
+                width: 16.6666666667%;
+            }
+        }
+        @media (max-width: 992px) {
+            .col {
+                width: 25%;
+            }
+        }
+        @media (max-width: 768px) {
+            .col {
+                width: 50%;
+            }
+        }
+        @media (max-width: 576px) {
+            .col {
+                width: 100%;
+            }
+        }
+</style>
+```
+
+```html
+<style>
+    /*或者优先手机端*/
+    .col {
+            width: 100%;
+        }
+        @media (min-width: 576px) {
+            .col {
+                width: 50%;
+            }
+        }
+        @media (min-width: 768px) {
+            .col {
+                width: 25%;
+            }
+        }
+        @media (min-width: 992px) {
+            .col {
+                width: 16.6666666667%;
+            }
+        }
+        @media (min-width: 1200px) {
+            .col {
+                width: 8.33333333%;
+            }
+        }
+</style>
+```
+
+
+
 ****
 
 
 
 ### 移动端常用单位
+
+- **px** ：CSS像素
+
+- **em** ：根据字体大小变化，1em 等于**元素自身**一个字体size所代表的的px的大小。
+
+  如，font-size是100px，则1em=100px， 2em = 200px
+
+  注意，在pc端最小生效的字体是12px
+
+  如果元素自身字体大小就是使用em作为单位，则em继承父元素的字体大小
+
+  因为em是基于自身元素字体大小的，所以实际开发很少用em（除了有些情况，如首行缩进2字符）
+
+- **rem**：根据**根元素**的字体大小变化，即根据`html`的`font-size`，实际开发一般使用rem作为单位
+
+- **vw**：视口宽度的百分比，如 50vw 为视口宽度的50%
+
+- **vh**：视口高度的百分比，如 100vh 为视口高度的100%
+
+  因为兼容性问题，vw和vh用的不是很多，rem还是主流
+
+
+
+根据视口宽度计算合适的rem对应的font-size值（等比例缩放）：
+
+```html
+<script>
+    setRemUnit();
+    
+    window.onresize = setRemUnit;
+    
+    function setRemUnit() {
+        var docEl = document.documentElement;
+        var viewWidth = docEl.clientWidth;
+        
+        docEl.style.fontSize = viewWidth / 375 * 20 + 'px';
+        
+        // docEl.style.fontSize = viewWidth / 750 * 40 + 'px';
+        // 1rem = 20px
+    }
+</script>
+```
+
+
 
